@@ -20,16 +20,23 @@ elif hypervisor[:-1].lower() == "hyperv":
         print ("!!!!!!!!!! ""hostssh systeminfo | findstr Time"" !!!!!!!!!!")
         print subprocess.Popen("hostssh 'systeminfo | findstr time'", shell=True, stdout=subprocess.PIPE).stdout.read()
 
-HOST=subprocess.Popen("hostname -I | awk {'print $1'}", shell=True, stdout=subprocess.PIPE).stdout.read()
+cvms=subprocess.Popen("svmips", shell=True, stdout=subprocess.PIPE).stdout.read()
+cvmx="".join((str(e) for e in cvms))
+cvms=cvmx.split(' ')
+
+for i in range(len(cvms)):
+        HOST=cvms[i]
 # Ports are handled in ~/.ssh/config since we use OpenSSH
-COMMAND="uptime -p; date;"
-ssh = subprocess.Popen(["ssh", "%s" % HOST, COMMAND],shell=False,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-result = ssh.stdout.readlines()
-if result == []:
-        error = ssh.stderr.readlines()
-        print >>sys.stderr, "ERROR: %s" % error
-else:
-        print result
+        COMMAND="uptime -p; date;"
+        ssh = subprocess.Popen(["ssh", "%s" % HOST, COMMAND],shell=False,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+        result = ssh.stdout.readlines()
+        if result == []:
+                error = ssh.stderr.readlines()
+                print >>sys.stderr, "ERROR: %s" % error
+        else:
+                print (cvms[i])
+                print (result)
+sys.exit(0)
 
 print ("!!!!!!!!!! ncli alert history duration=1 !!!!!!!!!!")
 print subprocess.Popen("ncli alert history duration=1", shell=True, stdout=subprocess.PIPE).stdout.read()
@@ -39,5 +46,3 @@ print subprocess.Popen("ncli alert ls max-alerts=20", shell=True, stdout=subproc
 
 print ("!!!!!!!!!! hostssh 'uptime -p; date' !!!!!!!!!!")
 print subprocess.Popen("hostssh 'uptime -p; date'", shell=True, stdout=subprocess.PIPE).stdout.read()
-
-#print subprocess.Popen("hostname -I | awk {'print $1'}", shell=True, stdout=subprocess.PIPE).stdout.read()
