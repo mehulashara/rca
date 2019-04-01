@@ -45,3 +45,18 @@ print subprocess.Popen("ncli alert history duration=1", shell=True, stdout=subpr
 
 print "!!!!!!!!!! ncli alert ls max-alerts=20 !!!!!!!!!!!!"
 print subprocess.Popen("ncli alert ls max-alerts=20", shell=True, stdout=subprocess.PIPE).stdout.read()
+
+print "!!!!!!!!!! allssh 'ls -lrth ~/data/logs/*FATAL'; date !!!!!!!!!"
+for i in range(len(cvms)):
+        HOST=cvms[i]
+# Ports are handled in ~/.ssh/config since we use OpenSSH
+        COMMAND="ls -lrth ~/data/logs/*FATAL;date"
+        ssh = subprocess.Popen(["ssh", "%s" % HOST, COMMAND],shell=False,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+        result = ssh.stdout.readlines()
+        if result == []:
+                error = ssh.stderr.readlines()
+                print >>sys.stderr, "ERROR: %s" % error
+        else:
+                print "................................... CVM "+ cvms[i] +" ..............................."
+                for i in range(len(result)):
+                        print result[i]
