@@ -1,4 +1,4 @@
-# RCA SCRIPT
+# Nutanix RCA Script
 Nutanix Cluster RCA script
 File name: rca.py
 
