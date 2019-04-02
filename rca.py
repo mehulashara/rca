@@ -4,11 +4,12 @@
 # Author: Mehul Ashara  
 # Email: mehul.ashara@nutanix.com
 # Date created: 04/01/2019
-# Date last modifed: 04/01/2019
+# Date last modifed: 04/02/2019
 # Python version: 2.7.5
 # Purpose: This hypervisor agnostic script is to be run from CVM to simplify 
 # RCA process for SREs. 
-# Usage: rca.py >> /home/nutanix/tmp/rca_"$(date +"%Y-%m-%d_%H-%M").log"
+# Usage: python rca.py >> /home/nutanix/tmp/rca_"$(date +"%Y-%m-%d_%H-%M").log"
+# Run the script ONLY as nutanix user
 #-------------------------------------------------------------------------#
 import subprocess
 import sys
@@ -76,17 +77,16 @@ def rca_out(hypervisor):
 		print "!!!!!!!!!! allssh 'ls -lrth ~/data/logs/*FATAL'; date !!!!!!!!!"
 		for i in range(len(cvms)):
         		HOST=cvms[i]
-# Ports are handled in ~/.ssh/config since we use OpenSSH
-        	COMMAND="ls -lrth ~/data/logs/*FATAL;date"
-        	ssh = subprocess.Popen(["ssh", "%s" % HOST, COMMAND],shell=False,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-        	result = ssh.stdout.readlines()
-        	if result == []:
-                	error = ssh.stderr.readlines()
-                	print >>sys.stderr, "ERROR: %s" % error
-        	else:
-                	print "................................... CVM "+ cvms[i] +" ..............................."
-                	for i in range(len(result)):
-                        	print result[i]
+        		COMMAND="ls -lrth ~/data/logs/*FATAL;date"
+        		ssh = subprocess.Popen(["ssh", "%s" % HOST, COMMAND],shell=False,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+        		result = ssh.stdout.readlines()
+        		if result == []:
+                		error = ssh.stderr.readlines()
+                		print >>sys.stderr, "ERROR: %s" % error
+        		else:
+                		print "................................... CVM "+ cvms[i] +" ..............................."
+                		for i in range(len(result)):
+                        		print result[i]
 
 		print "-------------------------- Cluster details, status and FT status ----------------------------"
 
