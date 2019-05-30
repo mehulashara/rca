@@ -44,7 +44,7 @@ def rca_out(hypervisor):
                         print subprocess.Popen("hostssh 'ipmitool sel time get'", shell=True, stdout=subprocess.PIPE).stdout.read()
                 elif hypervisor == "hyperv":
                         print ("--------------- Running RCA script ---------------")
-                        print "!!!!!!!!!! Please run command manually on hyperv host: hostssh systeminfo | findstr Time" !!!!!!!!!!")
+                        print ("!!!!!!!!!! Please run command manually on hyperv host: hostssh systeminfo | findstr Time !!!!!!!!!!")
 #                       print subprocess.Popen("hostssh 'systeminfo | findstr time'", shell=True, stdout=subprocess.PIPE).stdout.read()
 
 		cvms=subprocess.Popen("svmips", shell=True, stdout=subprocess.PIPE).stdout.read()
