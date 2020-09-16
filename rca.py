@@ -1,16 +1,32 @@
+#########################################################################
+#  Manage RCA Script                                                    #
+#  Filename: rca.py                                                     #
+#  Script Version: 1.0.0                                                #
+#########################################################################
+#  Prerequisites:                                                       #
+#  1. Access to CVM shell with nutanix user                             #
+#  2. Python 2.7                                                        #
+#########################################################################
+#  Synopsis                                                             #
+#  This script is intended to collect cluster information on cases      #
+#  involving RCA running AHV or vMware as hypervisor   		        #
+#  Usage 								#
+# python rca.py >> /home/nutanix/tmp/rca_"$(date +"%Y-%m-%d_%H-%M").log"#
+#########################################################################
+# Disclaimer                                                            #
+# This code is intended as a standalone example. Subject to licensing   #
+# restrictions defined on nutanix.dev, this can be downloaded, copied   #
+# and/or modified in any way you see fit.                               #
+# Please be aware that all public code samples provided by Nutanix are  #
+# unofficial in nature, are provided as examples only, are unsupported  #
+# and will need to be heavily scrutinized and potentially modified      #
+# before they can be used in a production environment. All such code    #
+# samples are provided on an as-is basis, and Nutanix expressly         #
+# disclaims all warranties, express or implied.                         #
+# All code samples are © Nutanix, Inc., and are provided as-is under    #
+# the MIT license. (https://opensource.org/licenses/MIT)                #
+#########################################################################
 #!/usr/bin/python
-#------------------------------------------------------------------------#
-# File name: rca.py
-# Author: Mehul Ashara  
-# Email: mehul.ashara@nutanix.com
-# Date created: 04/01/2019
-# Date last modifed: 04/03/2019
-# Python version: 2.7.5
-# Purpose: This hypervisor agnostic script is to be run from CVM to simplify 
-# RCA process for SREs. 
-# Usage: python rca.py >> /home/nutanix/tmp/rca_"$(date +"%Y-%m-%d_%H-%M").log"
-# Run the script ONLY as nutanix user
-#-------------------------------------------------------------------------#
 import subprocess
 import sys
 
@@ -23,7 +39,7 @@ def find_hypervisor():
 
 		if hypervisor[:-1].lower() == "vmware":
 			hypervisor="vmware"
-		elif hypervisor[:-1].lower() == "acropolis":
+		elif hypervisor[:-1].lower() == "ahv":
 			hypervisor="acropolis"
 		elif hypervisor[:-1].lower() == "hyperv":
 			hypervisor="hyperv"
@@ -45,7 +61,7 @@ def rca_out(hypervisor):
                 elif hypervisor == "hyperv":
                         print ("--------------- Running RCA script ---------------")
                         print ("!!!!!!!!!! Please run command manually on hyperv host: hostssh systeminfo | findstr Time !!!!!!!!!!")
-#                       print subprocess.Popen("hostssh 'systeminfo | findstr time'", shell=True, stdout=subprocess.PIPE).stdout.read()
+#                       print subprocess.Popen("hostssh 'winsh systeminfo | findstr time'", shell=True, stdout=subprocess.PIPE).stdout.read()
 
 		cvms=subprocess.Popen("svmips", shell=True, stdout=subprocess.PIPE).stdout.read()
 		cvmx="".join((str(e) for e in cvms))
